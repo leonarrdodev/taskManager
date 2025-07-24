@@ -1,54 +1,68 @@
 <!DOCTYPE html>
+<!-- Define o idioma do documento como Português do Brasil, importante para acessibilidade e SEO. -->
 <html lang="pt-BR">
 <head>
+  <!-- Define o conjunto de caracteres como UTF-8, o padrão universal que suporta a maioria dos caracteres e símbolos. -->
   <meta charset="UTF-8" />
+  <!-- O título da página que aparece na aba do navegador. -->
   <title>Gerenciador de Tarefas</title>
+  <!-- Importa o framework Tailwind CSS via CDN, permitindo o uso de suas classes de utilidade para estilização. -->
   <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Bloco de CSS customizado para estilizar a barra de rolagem. -->
   <style>
-  /* Scroll personalizado para a lista de tarefas */
-  .custom-scroll::-webkit-scrollbar {
-    width: 8px;
-  }
+    /* Estilização da barra de rolagem para navegadores baseados em WebKit (Chrome, Safari). */
+    .custom-scroll::-webkit-scrollbar {
+      width: 8px; /* Largura da barra de rolagem. */
+    }
 
-  .custom-scroll::-webkit-scrollbar-track {
-    background: #1f2937; /* cinza escuro (bg-gray-800) */
-  }
+    .custom-scroll::-webkit-scrollbar-track {
+      background: #1f2937; /* Cor do fundo da trilha (equivalente a bg-gray-800 do Tailwind). */
+    }
 
-  .custom-scroll::-webkit-scrollbar-thumb {
-    background-color: #374151; /* cinza um pouco mais claro */
-    border-radius: 8px;
-  }
+    .custom-scroll::-webkit-scrollbar-thumb {
+      background-color: #374151; /* Cor do "polegar" (a parte móvel) da barra de rolagem. */
+      border-radius: 8px; /* Bordas arredondadas para o polegar. */
+    }
 
-  .custom-scroll::-webkit-scrollbar-thumb:hover {
-    background-color: #4b5563; /* hover um pouco mais claro */
-  }
-</style>
-
+    /* Efeito visual quando o mouse passa por cima do polegar da barra de rolagem. */
+    .custom-scroll::-webkit-scrollbar-thumb:hover {
+      background-color: #4b5563; /* Cor mais clara no hover. */
+    }
+  </style>
 </head>
+<!-- O corpo do documento com um fundo escuro (bg-gray-900) e texto claro (text-gray-100). min-h-screen garante que o corpo ocupe pelo menos toda a altura da tela. -->
 <body class="bg-gray-900 text-gray-100 min-h-screen">
 
+  <!-- Container principal com largura máxima (max-w-6xl), centralizado horizontalmente (mx-auto) e com preenchimento (padding) interno. -->
   <div class="max-w-6xl mx-auto px-4 py-8">
+    <!-- Título principal da página, estilizado com tamanho grande, negrito e centralizado. -->
     <h1 class="text-3xl font-bold text-center mb-8">Gerenciador de Tarefas</h1>
 
+    <!-- Grid layout que divide a página em colunas. Por padrão é 1 coluna, mas em telas médias (md) ou maiores, se torna um grid de 2 colunas. -->
     <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
 
-      <!-- Formulário fixo -->
+      <!-- Coluna 1: Formulário de Nova Tarefa. -->
+      <!-- 'h-fit' faz a altura se ajustar ao conteúdo. 'md:sticky' e 'md:top-8' fazem o formulário ficar fixo no topo da tela ao rolar a página em telas médias ou maiores. -->
       <div class="bg-gray-800 p-6 rounded-2xl shadow-lg h-fit md:sticky md:top-8">
         <h2 class="text-xl font-semibold mb-4">Nova Task</h2>
+        <!-- Formulário para criar uma nova tarefa. O 'action' indica para onde os dados serão enviados e 'method' define o método HTTP (POST). -->
         <form action="/tasks" method="POST" class="space-y-4">
+          <!-- Campo de entrada para o título da tarefa. -->
           <input 
             type="text" 
             name="title" 
             placeholder="Título" 
-            required
+            required <!-- Torna o campo obrigatório -->
             class="w-full p-3 rounded-lg bg-gray-700 text-white placeholder-gray-400 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
+          <!-- Área de texto para a descrição da tarefa. -->
           <textarea 
             name="description" 
             placeholder="Descrição" 
-            required
+            required <!-- Torna o campo obrigatório. -->
             class="w-full p-3 rounded-lg bg-gray-700 text-white placeholder-gray-400 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
           ></textarea>
+          <!-- Botão para submeter o formulário e criar a tarefa. -->
           <button 
             type="submit"
             class="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg font-medium"
@@ -56,32 +70,44 @@
         </form>
       </div>
 
-      <!-- Lista de Tasks com rolagem -->
-       <div class="space-y-4 overflow-y-auto pr-2 max-h-[70vh] custom-scroll">
+      <!-- Coluna 2: Lista de Tarefas. -->
+      <!-- 'overflow-y-auto' permite rolagem vertical se o conteúdo exceder a altura. 'max-h-[70vh]' limita a altura a 70% da altura da viewport. 'custom-scroll' aplica o estilo de rolagem personalizado. -->
+      <div class="space-y-4 overflow-y-auto pr-2 max-h-[70vh] custom-scroll">
+        <!-- Início da lógica de template (EJS). Isso é processado no servidor. -->
+        <!-- Verifica se o array 'tasks' está vazio. -->
         <% if (tasks.length === 0) { %>
           <p class="text-gray-400 text-center">Nenhuma task cadastrada.</p>
         <% } %>
 
+        <!-- Itera sobre cada 'task' no array 'tasks'. -->
         <% tasks.forEach(task => { %>
+          <!-- Container para uma única tarefa. -->
           <div class="bg-gray-800 p-4 rounded-xl shadow-md flex justify-between items-center">
             <div>
+              <!-- Título da tarefa. Usa uma classe condicional: se a tarefa estiver 'concluida', aplica um risco (line-through) e cor cinza. -->
               <h3 class="text-lg font-semibold <%= task.status === 'concluida' ? 'line-through text-gray-500' : '' %>">
-                <%= task.title %>
+                <%= task.title %> <!-- Imprime o título da tarefa. -->
               </h3>
+              <!-- Descrição da tarefa. -->
               <p class="text-sm text-gray-400"><%= task.description %></p>
             </div>
+            <!-- Container para os botões de ação. -->
             <div class="flex gap-2">
+              <!-- Formulário para alternar o status da tarefa (concluir/reabrir). -->
               <form action="/tasks/<%= task.id %>/toggle" method="POST">
                 <button 
                   type="submit"
+                  <!-- A cor do botão muda com base no status da tarefa. -->
                   class="px-3 py-1 rounded-lg text-white text-sm 
                     <%= task.status === 'concluida' 
                       ? 'bg-yellow-500 hover:bg-yellow-600' 
                       : 'bg-green-600 hover:bg-green-700' %>"
                 >
+                  <!-- O texto do botão também muda com base no status. -->
                   <%= task.status === 'concluida' ? 'Reabrir' : 'Concluir' %>
                 </button>
               </form>
+              <!-- Formulário para excluir a tarefa. -->
               <form action="/tasks/<%= task.id %>/delete" method="POST">
                 <button 
                   type="submit"
@@ -92,7 +118,7 @@
               </form>
             </div>
           </div>
-        <% }) %>
+        <% }) %> <!-- Fim do loop forEach. -->
       </div>
 
     </div>
