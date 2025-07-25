@@ -1,34 +1,45 @@
+<!-- 
+  Este é um arquivo EJS (Embedded JavaScript), que permite embutir código JavaScript dentro do HTML.
+  O servidor processará este arquivo, executará o JavaScript e enviará o HTML resultante para o navegador.
+-->
 <!DOCTYPE html>
 <html lang="pt-BR">
   <head>
     <meta charset="UTF-8" />
     <title>Gerenciador de Tarefas</title>
+    <!-- Carrega o Tailwind CSS a partir de uma CDN para estilização rápida e baseada em utilitários. -->
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-      /* Scroll estilizado */
+      /* Bloco de CSS customizado para estilizar a barra de rolagem em navegadores baseados em WebKit (Chrome, Safari, etc.). */
       .custom-scroll::-webkit-scrollbar {
-        width: 8px;
+        width: 8px; /* Largura da barra de rolagem */
       }
       .custom-scroll::-webkit-scrollbar-track {
-        background: #1f2937;
+        background: #1f2937; /* Cor do fundo da trilha da barra de rolagem */
       }
       .custom-scroll::-webkit-scrollbar-thumb {
-        background-color: #374151;
-        border-radius: 8px;
+        background-color: #374151; /* Cor do "polegar" (a parte que se move) */
+        border-radius: 8px; /* Bordas arredondadas */
       }
       .custom-scroll::-webkit-scrollbar-thumb:hover {
-        background-color: #4b5563;
+        background-color: #4b5563; /* Cor do "polegar" ao passar o mouse */
       }
     </style>
   </head>
+  <!-- O corpo da página com um fundo escuro e texto claro, ocupando no mínimo toda a altura da tela. -->
   <body class="bg-gray-900 text-gray-100 min-h-screen">
+    <!-- Container principal com largura máxima, centralizado e com espaçamento interno. -->
     <div class="max-w-6xl mx-auto px-4 py-8">
       <h1 class="text-3xl font-bold text-center mb-8">Gerenciador de Tarefas</h1>
 
+      <!-- Layout em grid que se divide em duas colunas em telas médias (md) ou maiores. Em telas pequenas, fica em uma única coluna. -->
       <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-        <!-- Formulário fixo -->
+        
+        <!-- Coluna 1: Formulário de Nova Tarefa -->
+        <!-- 'h-fit' faz a altura se ajustar ao conteúdo. 'md:sticky' faz o formulário "grudar" no topo da tela ao rolar a página em telas médias ou maiores. -->
         <div class="bg-gray-800 p-6 rounded-2xl shadow-lg h-fit md:sticky md:top-8">
           <h2 class="text-xl font-semibold mb-4">Nova Task</h2>
+          <!-- O formulário envia os dados via POST para a rota '/tasks'. -->
           <form action="/tasks" method="POST" class="space-y-4">
             <input 
               type="text" 
@@ -52,32 +63,63 @@
           </form>
         </div>
 
-        <!-- Lista de tasks com scroll -->
+        <!-- Coluna 2: Lista de Tarefas -->
+        <!-- 'overflow-y-auto' adiciona uma barra de rolagem vertical se o conteúdo exceder a altura máxima. -->
+        <!-- 'max-h-[70vh]' define a altura máxima como 70% da altura da viewport. -->
+        <!-- 'custom-scroll' aplica nosso estilo customizado para a barra de rolagem. -->
         <div class="space-y-4 overflow-y-auto pr-2 max-h-[70vh] custom-scroll">
+          
+          <!-- Bloco EJS: Condicional para verificar se o array 'tasks' está vazio. -->
+          <!-- A variável 'tasks' é passada pelo controller no método res.render(). -->
           <% if (tasks.length === 0) { %>
             <p class="text-gray-400 text-center">Nenhuma task cadastrada.</p>
           <% } %>
 
+          <!-- Bloco EJS: Loop para iterar sobre cada 'task' no array 'tasks'. -->
           <% tasks.forEach(task => { %>
+            <!-- Container para cada item da lista de tarefas. -->
             <div class="bg-gray-800 p-4 rounded-xl shadow-md flex justify-between items-center">
               <div>
+                <!-- Título da tarefa. -->
+                <!-- Bloco EJS inline: Aplica classes condicionalmente. Se a task estiver 'concluida', adiciona as classes 'line-through' (riscado) e 'text-gray-500'. -->
                 <h3 class="text-lg font-semibold <%= task.status === 'concluida' ? 'line-through text-gray-500' : '' %>">
+                  <!-- Bloco EJS: Imprime o valor de task.title. -->
                   <%= task.title %>
                 </h3>
+                <!-- Descrição da tarefa. -->
                 <p class="text-sm text-gray-400"><%= task.description %></p>
               </div>
+              
+              <!-- Container para os botões de ação. -->
               <div class="flex gap-2">
+                
+                <!-- Formulário para o botão de 'Concluir'/'Reabrir'. -->
+                <!-- O 'action' do formulário é dinâmico, incluindo o ID da tarefa. -->
                 <form action="/tasks/<%= task.id %>/toggle" method="POST">
                   <button 
                     type="submit"
                     class="px-3 py-1 rounded-lg text-white text-sm 
+                      <!-- EJS: Condicional para mudar a cor do botão com base no status. -->
                       <%= task.status === 'concluida' 
-                        ? 'bg-yellow-500 hover:bg-yellow-600' 
-                        : 'bg-green-600 hover:bg-green-700' %>"
+                          ? 'bg-blue-500 hover:bg-blue-600' 
+                          : 'bg-green-600 hover:bg-green-700' %>"
                   >
+                    <!-- EJS: Condicional para mudar o texto do botão com base no status. -->
                     <%= task.status === 'concluida' ? 'Reabrir' : 'Concluir' %>
                   </button>
                 </form>
+                
+                <!-- Formulário para o botão 'Editar'. Usa o método GET para navegar para a página de edição. -->
+                <form action="/tasks/<%= task.id %>/edit" method="GET">
+                  <button 
+                    type="submit"
+                    class="px-3 py-1 rounded-lg bg-yellow-600 hover:bg-yellow-700 text-white text-sm"
+                  >
+                    Editar
+                  </button>
+                </form>
+                
+                <!-- Formulário para o botão 'Excluir'. -->
                 <form action="/tasks/<%= task.id %>/delete" method="POST">
                   <button 
                     type="submit"
@@ -88,7 +130,7 @@
                 </form>
               </div>
             </div>
-          <% }) %>
+          <% }) %> <!-- Fim do loop forEach. -->
         </div>
       </div>
     </div>

@@ -77,5 +77,41 @@ module.exports = {
 
         // Redireciona o usuário para a página principal.
         res.redirect('/tasks');
+    },
+
+    /**
+     * @description Renderiza a página de edição de uma tarefa específica.
+     * @param {object} req - O objeto de requisição, contendo o 'id' da tarefa nos parâmetros da rota.
+     * @param {object} res - O objeto de resposta.
+     */
+    edit(req, res){
+        // Extrai o 'id' dos parâmetros da URL.
+        const { id } = req.params;
+
+        // Busca a tarefa específica pelo seu ID utilizando o método 'getById' do Model.
+        const task = Task.getById(id);
+
+        // Renderiza a view 'edit' (ex: edit.ejs), passando os dados da tarefa encontrada.
+        // A view usará esses dados para preencher o formulário de edição.
+        res.render('edit', { task });
+    },
+    
+    /**
+     * @description Atualiza uma tarefa com as novas informações enviadas pelo formulário de edição.
+     * @param {object} req - O objeto de requisição. Contém o 'id' nos parâmetros e os novos 'title' e 'description' no corpo.
+     * @param {object} res - O objeto de resposta.
+     */
+    update(req, res){
+        // Extrai o 'id' dos parâmetros da URL para saber qual tarefa atualizar.
+        const { id } = req.params;
+        
+        // Extrai o novo 'title' e 'description' do corpo da requisição (dados do formulário).
+        const { title, description } = req.body;
+
+        // Chama o método 'update' do Model, passando o ID da tarefa e um objeto com os novos dados a serem atualizados.
+        Task.update(id, { title, description });
+        
+        // Redireciona o usuário para a lista de tarefas, onde a tarefa atualizada será exibida.
+        res.redirect('/tasks');
     }
 };

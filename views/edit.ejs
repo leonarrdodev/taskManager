@@ -1,0 +1,71 @@
+<!-- 
+  Este é o template EJS para a página de edição de uma tarefa.
+  Ele recebe um objeto 'task' do controller para preencher o formulário.
+-->
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>Editar Task</title>
+  <!-- Carrega o Tailwind CSS a partir de uma CDN para estilização. -->
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<!-- 
+  O corpo da página é estilizado para ser um container flexível, 
+  centralizando seu conteúdo tanto verticalmente ('items-center') quanto horizontalmente ('justify-center').
+-->
+<body class="bg-gray-900 text-gray-100 min-h-screen flex items-center justify-center px-4">
+
+  <!-- Card principal que contém o formulário, com fundo escuro, cantos arredondados e largura máxima. -->
+  <div class="bg-gray-800 p-8 rounded-2xl shadow-lg w-full max-w-lg">
+    <h1 class="text-2xl font-bold mb-6 text-center">Editar Task</h1>
+
+    <!-- 
+      Formulário de edição. 
+      O atributo 'action' é construído dinamicamente usando o ID da tarefa.
+      Ele enviará os dados via POST para a rota específica de atualização (ex: /tasks/123/update).
+    -->
+    <form action="/tasks/<%= task.id %>/update" method="POST" class="space-y-4">
+
+      <!-- Campo para o Título -->
+      <!-- O atributo 'value' é preenchido com o título atual da tarefa, permitindo que o usuário o veja e edite. -->
+      <input 
+        type="text" 
+        name="title" 
+        value="<%= task.title %>" 
+        required
+        class="w-full p-3 rounded-lg bg-gray-700 text-white placeholder-gray-400 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+      />
+
+      <!-- Campo para a Descrição -->
+      <!-- Para textareas, o conteúdo inicial é colocado entre as tags de abertura e fechamento. -->
+      <textarea 
+        name="description" 
+        required
+        class="w-full p-3 rounded-lg bg-gray-700 text-white placeholder-gray-400 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+      ><%= task.description %></textarea>
+
+      <!-- Container para os botões de ação -->
+      <div class="flex justify-between">
+        <!-- 
+          Botão de Cancelar. 
+          É um link ('<a>') estilizado como um botão que simplesmente redireciona o usuário de volta para a lista de tarefas.
+        -->
+        <a href="/tasks" class="px-4 py-2 rounded-lg bg-gray-600 hover:bg-gray-700 text-white font-medium">
+          Cancelar
+        </a>
+
+        <!-- Botão para submeter o formulário e salvar as alterações. -->
+        <button 
+          type="submit"
+          class="px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-medium"
+        >
+          Salvar Alterações
+        </button>
+      </div>
+
+    </form>
+  </div>
+
+</body>
+</html>

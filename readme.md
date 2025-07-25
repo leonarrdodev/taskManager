@@ -4,13 +4,17 @@ Um sistema simples de gerenciamento de tarefas desenvolvido com Node.js, Express
 
 ## Funcionalidades
 
-- Criar tarefas com título e descrição
-- Listar tarefas em tempo real
-- Marcar tarefas como concluídas ou pendentes
-- Excluir tarefas
-- Layout em colunas (formulário + lista)
-- Interface moderna com Tailwind e tema escuro
-- Scroll estilizado na lista
+- Criar Tarefas: Adicione novas tarefas com título e descrição através de um formulário simples.
+
+- Listar Tarefas: Visualize todas as tarefas cadastradas em uma lista organizada.
+
+- Atualizar Tarefas: Edite o título e a descrição de tarefas existentes.
+
+- Marcar como Concluída/Pendente: Alterne o status de uma tarefa com um único clique.
+
+- Excluir Tarefas: Remova tarefas que não são mais necessárias.
+
+- Layout Responsivo: Interface amigável que se adapta a diferentes tamanhos de tela, de desktops a dispositivos móveis.
 
 ## Arquitetura MVC
 
